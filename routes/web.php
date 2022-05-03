@@ -26,7 +26,8 @@ Route::get('paises', function(){
             "ciudades"=>[
                 "Medellin",
                 "Cali",
-                "Barranquilla"
+                "Barranquilla",
+                "Cartagena"
             ]
         ],
         "peru"=>[
@@ -46,7 +47,6 @@ Route::get('paises', function(){
             "ciudades"=>[
                 "Capiata",
                 "Villa Elisa",
-                "Filadelfia"
             ]
         ]
     ];
