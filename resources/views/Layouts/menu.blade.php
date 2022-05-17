@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('materialize/css/materialize.css')}}" rel="stylesheet"/>
-    <title>Document</title>
+    <title>Productos</title>
 </head>
 <body>
     <nav class="light-blue darken-4">
@@ -22,6 +22,12 @@
         </div>
     
     <script src="{{asset('materialize/js/materialize.js')}}">        
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems,[]);
+        });
     </script>
 </body>
 </html>
