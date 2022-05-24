@@ -6,6 +6,7 @@ use App\Models\Producto;
 use App\Models\Marca;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
 {
@@ -44,16 +45,47 @@ class ProductoController extends Controller
      */
     public function store(Request $r)
     {
-        //crear entidad producto
-        $p = new Producto;
-        //asignar valores a atributos de nuevo producto
-        $p->nombre = $r->nombre;
-        $p->descripcion = $r->descripcion;
-        $p->precio = $r->precio;
-        $p->marca_id = $r->marca;
-        $p->categoria_id = $r->categoria;
-        $p->save();
-        echo "Producto Guardado";
+        //Reglas de Validacion
+        $reglas=[
+            "nombre"=>'required|alpha',
+            "descripcion"=>'required|min:10|max:50',
+            "precio"=>'required|numeric',
+            "marca"=>'required',
+            "categoria"=>'required'
+        ];
+        //mensajes personalizados por regla
+        $mensajes=[
+            "required"=>"Campo Obligatorio",
+            "numeric"=>"Solo se Aceptan valores numericos",
+            "alpha"=>"Solo se Aceptan letras",
+            "min"=>"Se debe escribir minimo 10 caracteres",
+            "max"=>"Se debe escribir máximo 50 caracteres"
+        ];
+        //crear el objeto
+        $v = Validator::make($r->all(),$reglas,$mensajes);
+        
+        //validar datos: metodo fails
+        if ($v->fails()){
+            //validacion fallida
+            //mostrar mensajes de validación
+            return redirect('productos/create')
+            ->withErrors($v)
+            ->withInput();
+        }else{
+            //crear entidad producto
+            $p = new Producto;
+            //asignar valores a atributos de nuevo producto
+            $p->nombre = $r->nombre;
+            $p->descripcion = $r->descripcion;
+            $p->precio = $r->precio;
+            $p->marca_id = $r->marca;
+            $p->categoria_id = $r->categoria;
+            $p->save();
+            //redireccionar a la ruta : create  
+            //llevando datos de sesión
+            return redirect('productos/create')
+            ->with('mensaje','Producto Registrado');
+        }
     }
 
     /**
