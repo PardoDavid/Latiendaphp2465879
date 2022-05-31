@@ -47,11 +47,12 @@ class ProductoController extends Controller
     {
         //Reglas de Validacion
         $reglas=[
-            "nombre"=>'required|alpha',
+            "nombre"=>'required|alpha|unique:productos,nombre',
             "descripcion"=>'required|min:10|max:50',
             "precio"=>'required|numeric',
             "marca"=>'required',
-            "categoria"=>'required'
+            "categoria"=>'required',
+            "imagen"=>'required|image'
         ];
         //mensajes personalizados por regla
         $mensajes=[
@@ -59,7 +60,9 @@ class ProductoController extends Controller
             "numeric"=>"Solo se Aceptan valores numericos",
             "alpha"=>"Solo se Aceptan letras",
             "min"=>"Se debe escribir minimo 10 caracteres",
-            "max"=>"Se debe escribir máximo 50 caracteres"
+            "max"=>"Se debe escribir máximo 50 caracteres",
+            "image"=>"El archivo debe ser de tipo imagen",
+            "unique"=>"El nombre ya existe"
         ];
         //crear el objeto
         $v = Validator::make($r->all(),$reglas,$mensajes);
@@ -72,6 +75,14 @@ class ProductoController extends Controller
             ->withErrors($v)
             ->withInput();
         }else{
+
+            //Asignar a variable nombre_archivo
+            $nombre_archivo=$r->imagen->getClientOriginalName();
+            $archivo=$r->imagen;
+            //mover archivo a carpeta public 
+            $ruta=public_path().'/img';
+            $archivo->move($ruta,$nombre_archivo);
+
             //crear entidad producto
             $p = new Producto;
             //asignar valores a atributos de nuevo producto
@@ -80,8 +91,10 @@ class ProductoController extends Controller
             $p->precio = $r->precio;
             $p->marca_id = $r->marca;
             $p->categoria_id = $r->categoria;
+            $p->imagen=$nombre_archivo;
             $p->save();
             //redireccionar a la ruta : create  
+
             //llevando datos de sesión
             return redirect('productos/create')
             ->with('mensaje','Producto Registrado');
