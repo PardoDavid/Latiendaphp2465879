@@ -2,13 +2,23 @@
 
 @section('contenido')
 <link href="{{ asset('materialize/css/materialize.css')}}" rel="stylesheet"/>
+@if(session('mensaje'))
+<div class="row">
+    <strong>
+        {{session('mensaje')}}
+        <a href="{{route('cart.index')}}">
+            Ir al Carrito
+        </a>
+    </strong>
+</div>
+@endif
     <div class="row">   
         <h1>Catalogo de Producto</h1>
     </div>
     @foreach($productos as $producto)
     
     <div class="row">
-        <div class="col s6">
+        <div class="col s8">
                 <span class="card-tittle blue-text text-darken-2 z-depth-2">{{$producto->nombre}}</span>
                 </div><br>
                 <div class="card-content blue-text text-darken-2 ">
@@ -17,9 +27,9 @@
                 <div class="card">
                 <div class="card-image blue-text text-darken-2">
                     @if($producto->imagen===null)
-                    <img class="circle responsive-img" src="{{ asset('img/nodisp.jpg' ) }}" alt="" />
+                    <img  src="{{ asset('img/nodisp.jpg' ) }}" class="circle responsive-img" alt="" />
                     @else
-                    <img class="circle responsive-img" src="{{ asset('img/'.$producto->imagen) }}" alt="" />
+                    <img  src="{{ asset('img/'.$producto->imagen) }}" class="circle responsive-img" alt="" />
                     @endif
                     
                 <div class="card-action blue-text text-darken-2">
